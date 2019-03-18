@@ -5,7 +5,7 @@
 #include "Table.h"
 
 using namespace std;
-
+//
 class Database 
 {
 private:
@@ -36,6 +36,28 @@ public:
 
 	// Query command
 	Table query(vector<string> select, string from, string where);
+
+	// SELECT vector takes a list of attributes to display. A vector of a single string "*" will signify to
+	// keep all attributes
+	//
+	// FROM string will take the table name and perform the query on that table
+	//
+	// WHERE string must be in a proper format to function properly. Each statement beside an AND or OR operation
+	// must be surrounded by parenthesis. In addition, the NOT operation can only be performed on a single evaluation.
+	// Numbers should not use apostrophes, while strings should. See examples for an idea of what will work and what 
+	// will not. The entire statement should not be within a single parenthesis set.
+	//
+	// Example Where Strings that Will Work:
+	//
+	// "Age <= 20"
+	// "((Age > 20) OR (NOT Index = 1)) AND (Bool <> 'Yes')"  
+	// "(Age <= 12) AND (NOT Index < 3) OR (Bool = 'Yes')"
+	// 
+	// Example Where Strings that Will NOT Work:
+	//
+	// "(Age <= 20)"
+	// "NOT(Age <= 20)"
+	// "Age > 20 AND Bool = 'Yes'"
 	
 };
 
