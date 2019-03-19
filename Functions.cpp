@@ -6,7 +6,7 @@ using namespace std;
 Database* populateDatabase()
 {
 	Database* db = new Database();
-	
+
 	/**********************************
 	*       FILL BUSINESS TABLE       *
 	***********************************/
@@ -18,14 +18,15 @@ Database* populateDatabase()
 	}
 	else
 	{
-		cout << "error: 'business.json' did not open" << endl;
+		std::cout << "error: 'business.json' did not open" << endl;
 		return db;
 	}
 	std::string line;
 	const char* json_line;
 	rapidjson::Document doc;
+	vector<string> business_ids;  // vector for business id's
 
-	Table* business_table = new Table( {"business_id", "name", "address", "city", "state", "postal_code", "stars", "review_count", "is_open", "categories" } );
+	Table* business_table = new Table({ "business_id", "name", "address", "city", "state", "postal_code", "stars", "review_count", "is_open", "categories" });
 
 	for (int i = 0; i < 1000; i++) // get 1000 lines 
 	{
@@ -40,6 +41,7 @@ Database* populateDatabase()
 		if (!doc["business_id"].IsNull())
 		{
 			new_record.setEntry(0, doc["business_id"].GetString());
+			business_ids.push_back(doc["business_id"].GetString());
 		}
 		else
 		{
@@ -156,11 +158,13 @@ Database* populateDatabase()
 	}
 	else
 	{
-		cout << "error: 'user.json' did not open" << endl;
+		std::cout << "error: 'user.json' did not open" << endl;
 		return db;
 	}
 
 	Table* user_table = new Table({ "user_id", "name", "review_count", "yelping_since", "useful", "funny", "cool", "elite", "friends", "fans", "average_stars" });
+
+	vector<string> user_ids;
 
 	for (int i = 0; i < 1000; i++) // get 1000 lines 
 	{
@@ -175,6 +179,7 @@ Database* populateDatabase()
 		if (!doc["user_id"].IsNull())
 		{
 			new_record.setEntry(0, doc["user_id"].GetString());
+			user_ids.push_back(doc["user_id"].GetString());
 		}
 		else
 		{
@@ -194,7 +199,7 @@ Database* populateDatabase()
 		assert(doc.HasMember("review_count"));
 		if (!doc["review_count"].IsNull())
 		{
-			new_record.setEntry(2, to_string (doc["review_count"].GetInt()) );
+			new_record.setEntry(2, to_string(doc["review_count"].GetInt()));
 		}
 		else
 		{
@@ -205,150 +210,6 @@ Database* populateDatabase()
 		if (!doc["yelping_since"].IsNull())
 		{
 			new_record.setEntry(3, doc["yelping_since"].GetString());
-		}
-		else
-		{
-			new_record.setEntry(3, "");
-		}
-
-		assert(doc.HasMember("useful"));
-		if (!doc["useful"].IsNull())
-		{
-			new_record.setEntry(4, to_string (doc["useful"].GetInt()) );
-		}
-		else
-		{
-			new_record.setEntry(4, "");
-		}
-
-		assert(doc.HasMember("funny"));
-		if (!doc["funny"].IsNull())
-		{
-			new_record.setEntry(5, to_string (doc["funny"].GetInt()) );
-		}
-		else
-		{
-			new_record.setEntry(5, "");
-		}
-
-		assert(doc.HasMember("cool"));
-		if (!doc["cool"].IsNull())
-		{
-			new_record.setEntry(6, to_string (doc["cool"].GetInt()) );
-		}
-		else
-		{
-			new_record.setEntry(6, "");
-		}
-
-		assert(doc.HasMember("elite"));
-		if (!doc["elite"].IsNull())
-		{
-			new_record.setEntry(7, doc["elite"].GetString());
-		}
-		else
-		{
-			new_record.setEntry(7, "");
-		}
-
-		assert(doc.HasMember("friends"));
-		if (!doc["friends"].IsNull())
-		{
-			new_record.setEntry(8, doc["friends"].GetString());
-		}
-		else
-		{
-			new_record.setEntry(8, "");
-		}
-
-		assert(doc.HasMember("fans"));
-		if (!doc["fans"].IsNull())
-		{
-			new_record.setEntry(9, to_string (doc["fans"].GetInt()) );
-		}
-		else
-		{
-			new_record.setEntry(9, "");
-		}
-
-		assert(doc.HasMember("average_stars"));
-		if (!doc["average_stars"].IsNull())
-		{
-			new_record.setEntry(10, to_string (doc["average_stars"].GetDouble()) );
-		}
-		else
-		{
-			new_record.setEntry(10, "");
-		}
-
-		// add record to Table
-		user_table->insertRecord(new_record);
-	}
-	user_file.close();
-
-	// add user table to database
-	db->addTable(*user_table, "User");
-
-	/**********************************
-	*        FILL REVIEW TABLE        *
-	***********************************/
-	ifstream review_file;
-	review_file.open("review.json");
-	if (review_file.is_open())
-	{
-		// good to go
-	}
-	else
-	{
-		cout << "error: 'review.json' did not open" << endl;
-		return db;
-	}
-
-	Table* review_table = new Table({ "review_id", "user_id", "business_id", "stars", "useful", "funny", "cool", "text", "date" }); 
-
-	for (int i = 0; i < 100000; i++) // get 1000 lines 
-	{
-		getline(review_file, line);
-		json_line = line.c_str();
-		doc.Parse(json_line);
-
-		// Fill a record in the Table
-		Record new_record(9);
-
-		assert(doc.HasMember("review_id"));
-		if (!doc["review_id"].IsNull())
-		{
-			new_record.setEntry(0, doc["review_id"].GetString());
-		}
-		else
-		{
-			new_record.setEntry(0, "");
-		}
-
-		assert(doc.HasMember("user_id"));
-		if (!doc["user_id"].IsNull())
-		{
-			new_record.setEntry(1, doc["user_id"].GetString());
-		}
-		else
-		{
-			new_record.setEntry(1, "");
-		}
-
-		assert(doc.HasMember("business_id"));
-		if (!doc["business_id"].IsNull())
-		{
-			new_record.setEntry(2, doc["business_id"].GetString());
-		}
-		else
-		{
-			new_record.setEntry(2, "");
-		}
-
-		assert(doc.HasMember("stars"));
-		if (!doc["stars"].IsNull())
-		{
-			new_record.setEntry(3, to_string(doc["stars"].GetDouble()));
 		}
 		else
 		{
@@ -385,28 +246,131 @@ Database* populateDatabase()
 			new_record.setEntry(6, "");
 		}
 
-		assert(doc.HasMember("text"));
-		if (!doc["text"].IsNull())
+		assert(doc.HasMember("elite"));
+		if (!doc["elite"].IsNull())
 		{
-			new_record.setEntry(7, doc["text"].GetString());
+			new_record.setEntry(7, doc["elite"].GetString());
 		}
 		else
 		{
 			new_record.setEntry(7, "");
 		}
 
-		assert(doc.HasMember("date"));
-		if (!doc["date"].IsNull())
+		assert(doc.HasMember("friends"));
+		if (!doc["friends"].IsNull())
 		{
-			new_record.setEntry(8, doc["date"].GetString());
+			new_record.setEntry(8, doc["friends"].GetString());
 		}
 		else
 		{
 			new_record.setEntry(8, "");
 		}
 
+		assert(doc.HasMember("fans"));
+		if (!doc["fans"].IsNull())
+		{
+			new_record.setEntry(9, to_string(doc["fans"].GetInt()));
+		}
+		else
+		{
+			new_record.setEntry(9, "");
+		}
+
+		assert(doc.HasMember("average_stars"));
+		if (!doc["average_stars"].IsNull())
+		{
+			new_record.setEntry(10, to_string(doc["average_stars"].GetDouble()));
+		}
+		else
+		{
+			new_record.setEntry(10, "");
+		}
+
 		// add record to Table
-		review_table->insertRecord(new_record);
+		user_table->insertRecord(new_record);
+	}
+	user_file.close();
+
+	// add user table to database
+	db->addTable(*user_table, "User");
+
+	/**********************************
+	*        FILL REVIEW TABLE        *
+	***********************************/
+	ifstream review_file;
+	review_file.open("review.json");
+	if (review_file.is_open())
+	{
+		// good to go
+	}
+	else
+	{
+		std::cout << "error: 'review.json' did not open" << endl;
+		return db;
+	}
+
+	Table* review_table = new Table({ "review_id", "user_id", "business_id", "stars", "useful", "funny", "cool", "text", "date" });
+
+	bool validate_business, validate_user;
+
+	while (getline(review_file, line))
+	{
+		json_line = line.c_str();
+		doc.Parse(json_line);
+		validate_business = false;
+		validate_user = false;
+
+		// check for matching business
+		for (int i = 0; i < business_ids.size(); i++)
+		{
+			if (doc["business_id"].GetString() == business_ids.at(i))
+			{
+				validate_business = true;
+			}
+		}
+
+		// check for matching user
+		for (int i = 0; i < user_ids.size(); i++)
+		{
+			if (doc["user_id"].GetString() == user_ids.at(i))
+			{
+				validate_user = true;
+			}
+		}
+
+		if (validate_user && validate_business)
+		{
+			// Fill a record in the Table
+			Record new_record(9);
+
+			new_record.setEntry(0, doc["review_id"].GetString());
+		
+			new_record.setEntry(1, doc["user_id"].GetString());
+
+			new_record.setEntry(2, doc["business_id"].GetString());
+
+			new_record.setEntry(3, to_string(doc["stars"].GetDouble()));
+
+			new_record.setEntry(4, to_string(doc["useful"].GetInt()));
+
+			new_record.setEntry(5, to_string(doc["funny"].GetInt()));
+		
+			new_record.setEntry(6, to_string(doc["cool"].GetInt()));
+
+			if (!doc["text"].IsNull())
+			{
+				new_record.setEntry(7, doc["text"].GetString());
+			}
+			else
+			{
+				new_record.setEntry(7, "");
+			}
+
+			new_record.setEntry(8, doc["date"].GetString());
+
+			// add record to Table
+			review_table->insertRecord(new_record);
+		}
 	}
 	review_file.close();
 
