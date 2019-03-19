@@ -24,9 +24,9 @@ int main()
 		cout << "4) Business information" << endl;
 		cout << "5) User Reviews" << endl;
 		cout << "6) Business Reviews" << endl;
-		cout << "7) Query" << endl;
 
 		// get command
+		cin.clear();
 		cin >> command;
 
 		// process command
@@ -47,10 +47,7 @@ int main()
 		case 5: userReviews(db);
 			break;
 
-		case 6: businessReviews();
-			break;
-
-		case 7: userQuery();
+		case 6: businessReviews(db);
 			break;
 
 		default: cout << "Entry invalid..." << endl;
