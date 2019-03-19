@@ -306,7 +306,7 @@ Database* populateDatabase()
 
 	Table* review_table = new Table({ "review_id", "user_id", "business_id", "stars", "useful", "funny", "cool", "text", "date" }); 
 
-	for (int i = 0; i < 10000; i++) // get 1000 lines 
+	for (int i = 0; i < 100000; i++) // get 1000 lines 
 	{
 		getline(review_file, line);
 		json_line = line.c_str();
@@ -721,27 +721,33 @@ void userReviews(Database* db)
 
 			for (int j = 0; j < review_records.size(); j++)
 			{
-				cout << "Review # " << i << " - ";
+				cout << endl << endl << "Business: ";
 
 				select.clear();
 				select.push_back("name");
 				where_arg = "business_id = '";
-				string business_id = records.at(i).getEntry(2);
+				string business_id = review_records.at(j).getEntry(2);
 				where_arg.append(business_id);
 				where_arg.append("'");
 
 				Table business_name = db->query(select, "Business", where_arg);
 
-				vector<Record> name_record = user_reviews.getRecords();
+				vector<Record> name_record = business_name.getRecords();
 
-				cout << "Busines: " << name_record.at(0).getEntry(0) << endl;
-
-				cout << "stars: " << records.at(i).getEntry(3) << endl;
-				cout << "useful: " << records.at(i).getEntry(4) << endl;
-				cout << "funny: " << records.at(i).getEntry(5) << endl;
-				cout << "cool: " << records.at(i).getEntry(6) << endl;
-				cout << "date: " << records.at(i).getEntry(8) << endl;
-				cout << "Review: " << records.at(i).getEntry(7) << endl;
+				if (name_record.size() == 0)
+				{
+					cout << "Data not available for this business" << endl;
+				}
+				else
+				{
+					cout << "Busines: " << name_record.at(0).getEntry(0) << endl;
+				}
+				cout << "stars: " << review_records.at(j).getEntry(3) << endl;
+				cout << "useful: " << review_records.at(j).getEntry(4) << endl;
+				cout << "funny: " << review_records.at(j).getEntry(5) << endl;
+				cout << "cool: " << review_records.at(j).getEntry(6) << endl;
+				cout << "date: " << review_records.at(j).getEntry(8) << endl;
+				cout << "Review: " << review_records.at(j).getEntry(7) << endl;
 			}
 		}
 
@@ -769,6 +775,7 @@ void businessReviews(Database* db)
 	while (cont)
 	{
 		cout << "Enter name of business: ";
+		cin.ignore();
 		getline(cin, business);
 
 		vector<string> select;
@@ -778,7 +785,7 @@ void businessReviews(Database* db)
 		where_arg.append(business);
 		where_arg.append("'");
 
-		Table business_data = db->query(select, "Business", "business_id = 'ujmEBvifdJM6h6RLv4wQIg'");
+		Table business_data = db->query(select, "Business", where_arg);
 
 		vector<Record> records = business_data.getRecords();
 
