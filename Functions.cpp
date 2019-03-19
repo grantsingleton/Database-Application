@@ -306,7 +306,7 @@ Database* populateDatabase()
 
 	Table* review_table = new Table({ "review_id", "user_id", "business_id", "stars", "useful", "funny", "cool", "text", "date" }); 
 
-	for (int i = 0; i < 1000; i++) // get 1000 lines 
+	for (int i = 0; i < 10000; i++) // get 1000 lines 
 	{
 		getline(review_file, line);
 		json_line = line.c_str();
@@ -629,8 +629,7 @@ void businessInfo(Database* db)
 	{
 		string business;
 		cout << "Enter name of business: ";
-		cin.clear();
-		cin.ignore(1, '""');
+		cin.ignore();
 		getline(cin, business);
 
 		vector<string> select;
@@ -693,8 +692,6 @@ void userReviews(Database* db)
 	{
 		string user;
 		cout << "Enter name of user: ";
-		cin.clear();
-		cin.ignore(1, '""');
 		cin >> user;
 
 		vector<string> select;
@@ -764,12 +761,62 @@ void userReviews(Database* db)
 	}
 }
 
-void businessReviews()
+void businessReviews(Database* db)
 {
+	string business;
+	char command;
+	bool cont = true;
+	while (cont)
+	{
+		cout << "Enter name of business: ";
+		getline(cin, business);
 
+		vector<string> select;
+		select.push_back("business_id");
+		string where_arg = "name = ";
+		where_arg.append("'");
+		where_arg.append(business);
+		where_arg.append("'");
+
+		Table business_data = db->query(select, "Business", "business_id = 'ujmEBvifdJM6h6RLv4wQIg'");
+
+		vector<Record> records = business_data.getRecords();
+
+		if (records.size() > 0)
+		{
+			select.clear();
+			select.push_back("*");
+			where_arg = "business_id = ";
+			where_arg.append("'");
+			where_arg.append(records.at(0).getEntry(0));
+			where_arg.append("'");
+
+			Table review_table = db->query(select, "Review", where_arg);
+
+			vector<Record> review_records = review_table.getRecords();
+
+			for (int i = 0; i < review_records.size(); i++)
+			{
+				cout << review_records.at(i).getEntry(7) << endl << endl << endl;
+			}
+		}
+
+
+		cout << "Try another name? (y/n)" << endl;
+		cin.clear();
+		cin >> command;
+
+		// check continue condition
+		if (command == 'y')
+		{
+			cont = true;
+		}
+		else
+		{
+			cont = false;
+		}
+	}
 }
 
-void userQuery()
-{
 
-}
+

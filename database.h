@@ -15,6 +15,7 @@ private:
 	Table evaluateQuery(Table table, string statement);
 	Table evaluateBooleanQuery(Table table1, Table table2, string op);
 	string invertOperation(string);
+	string concatenateWords(vector<string> words);
 
 public:
 	// Constructor

@@ -17,5 +17,5 @@ void listBusinesses(Database* db);
 void userInfo(Database* db);
 void businessInfo(Database* db);
 void userReviews(Database* db);
-void businessReviews();
-void userQuery();
+void businessReviews(Database* db);
+
