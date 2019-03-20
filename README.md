@@ -28,3 +28,9 @@ They have the following functionality:
    this option, they are given specific instructions on how to enter their query. Once the query is submitted, the
    program will print out the table. This option allows the most freedom for exploring the dataset. Any query that 
    the dataset supports is possible with this option. 
+   
+NOTES: 
+
+JSON PARSING: For json parsing, we used 'rapidjson' an opensource Github program. I have included the '/include' folder, which contains the header files needed to run our Yelp dataset application. 
+
+RUNNING THE PROGRAM: Filling the database takes a while. The program reads in 500 businesses, 500 users, and 250,000 reviews. This also makes querying the reviews very slow since it has to search through 250,000 reviews. In order to have useful data, we must read in a lot of reviews, otherwise no reviews will be found for the users and businesses in our database. Not every user and business will have a review in the database. If you type in a business or user, and their is no reviews for them, please try another business or user until there are reviews. 
