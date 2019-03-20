@@ -746,10 +746,10 @@ void businessReviews(Database* db)
 
 			vector<Record> review_records = review_table.getRecords();
 
-			cout << "Reviews for " << business << ": " << endl << endl;
+			cout << endl << "Reviews for " << business << ": " << endl << endl;
 			for (int i = 0; i < review_records.size(); i++)
 			{
-				cout << "Stars: " << review_records.at(i).getEntry(3) << endl;
+				cout << "Stars: " << (round(atof(review_records.at(i).getEntry(3).c_str()) * 100.0) / 100.0) << endl;
 				cout << review_records.at(i).getEntry(7) << endl << endl << endl;
 			}
 		}
