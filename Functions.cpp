@@ -28,7 +28,7 @@ Database* populateDatabase()
 
 	Table* business_table = new Table({ "business_id", "name", "address", "city", "state", "postal_code", "stars", "review_count", "is_open", "categories" });
 
-	for (int i = 0; i < 1000; i++) // get 1000 lines 
+	for (int i = 0; i < 500; i++) // get 500 lines 
 	{
 		getline(business_file, line);
 		json_line = line.c_str();
@@ -166,7 +166,7 @@ Database* populateDatabase()
 
 	vector<string> user_ids;
 
-	for (int i = 0; i < 1000; i++) // get 1000 lines 
+	for (int i = 0; i < 500; i++) // get 500 lines 
 	{
 		getline(user_file, line);
 		json_line = line.c_str();
@@ -313,64 +313,42 @@ Database* populateDatabase()
 
 	bool validate_business, validate_user;
 
-	while (getline(review_file, line))
+	for (int i = 0; i < 150000; i++) // get 200,000 reviewa. Not all will be applicable to the users and businesses we have.
 	{
+		getline(review_file, line);
 		json_line = line.c_str();
 		doc.Parse(json_line);
-		validate_business = false;
-		validate_user = false;
-
-		// check for matching business
-		for (int i = 0; i < business_ids.size(); i++)
-		{
-			if (doc["business_id"].GetString() == business_ids.at(i))
-			{
-				validate_business = true;
-			}
-		}
-
-		// check for matching user
-		for (int i = 0; i < user_ids.size(); i++)
-		{
-			if (doc["user_id"].GetString() == user_ids.at(i))
-			{
-				validate_user = true;
-			}
-		}
-
-		if (validate_user && validate_business)
-		{
-			// Fill a record in the Table
-			Record new_record(9);
-
-			new_record.setEntry(0, doc["review_id"].GetString());
 		
-			new_record.setEntry(1, doc["user_id"].GetString());
+		// Fill a record in the Table
+		Record new_record(9);
 
-			new_record.setEntry(2, doc["business_id"].GetString());
-
-			new_record.setEntry(3, to_string(doc["stars"].GetDouble()));
-
-			new_record.setEntry(4, to_string(doc["useful"].GetInt()));
-
-			new_record.setEntry(5, to_string(doc["funny"].GetInt()));
+		new_record.setEntry(0, doc["review_id"].GetString());
 		
-			new_record.setEntry(6, to_string(doc["cool"].GetInt()));
+		new_record.setEntry(1, doc["user_id"].GetString());
 
-			if (!doc["text"].IsNull())
-			{
-				new_record.setEntry(7, doc["text"].GetString());
-			}
-			else
-			{
-				new_record.setEntry(7, "");
-			}
+		new_record.setEntry(2, doc["business_id"].GetString());
 
-			new_record.setEntry(8, doc["date"].GetString());
+		new_record.setEntry(3, to_string(doc["stars"].GetDouble()));
 
-			// add record to Table
-			review_table->insertRecord(new_record);
+		new_record.setEntry(4, to_string(doc["useful"].GetInt()));
+
+		new_record.setEntry(5, to_string(doc["funny"].GetInt()));
+		
+		new_record.setEntry(6, to_string(doc["cool"].GetInt()));
+
+		if (!doc["text"].IsNull())
+		{
+			new_record.setEntry(7, doc["text"].GetString());
 		}
+		else
+		{
+			new_record.setEntry(7, "");
+		}
+
+		new_record.setEntry(8, doc["date"].GetString());
+
+		// add record to Table
+		review_table->insertRecord(new_record);
 	}
 	review_file.close();
 
@@ -556,6 +534,7 @@ void userInfo(Database* db)
 		}
 		else
 		{
+			cout << endl << endl;
 			for (int i = 0; i < records.size(); i++)
 			{
 				cout << "Information about " << user << ":" << endl;
@@ -613,13 +592,14 @@ void businessInfo(Database* db)
 		}
 		else
 		{
+			cout << endl << endl;
 			for (int i = 0; i < records.size(); i++)
 			{
 				cout << "Information about " << business << ":" << endl;
 				cout << "Address: " << records.at(i).getEntry(2) << endl;
 				cout << "         " << records.at(i).getEntry(3) << ", " << records.at(i).getEntry(4) << " " << records.at(i).getEntry(5) << endl;
 				cout << "Review count: " << records.at(i).getEntry(7) << endl;
-				cout << "Star rating: " << records.at(i).getEntry(6) << endl;
+				cout << "Star rating: " << (round( atof(records.at(i).getEntry(6).c_str()) * 100.0) / 100.0) << endl;
 				cout << "Categories: " << records.at(i).getEntry(9) << endl;
 				if (records.at(i).getEntry(8) == "1")
 				{
@@ -766,8 +746,10 @@ void businessReviews(Database* db)
 
 			vector<Record> review_records = review_table.getRecords();
 
+			cout << "Reviews for " << business << ": " << endl << endl;
 			for (int i = 0; i < review_records.size(); i++)
 			{
+				cout << "Stars: " << review_records.at(i).getEntry(3) << endl;
 				cout << review_records.at(i).getEntry(7) << endl << endl << endl;
 			}
 		}
@@ -787,6 +769,56 @@ void businessReviews(Database* db)
 			cont = false;
 		}
 	}
+}
+
+void userQuery(Database* db)
+{
+	vector<string> select;
+	string select_string;
+	string from;
+	string where;
+	cout << "Enter query in the following format: " << endl;
+	cout << "select_arg1 select_arg2 select_arg3 etc.. (enter one at a time with whitespace between)" << endl;
+	cout << "from arg (enter the name of the table) choose from {User, Business, Review, Checkin}" << endl;
+	cout << "where arg: example: LHS = 'RHS' (be sure to include single quotes around RHS)" << endl;
+	cout << "use parenthesis for multiple where args: examples:" << endl;
+	cout << "(Age <= '12') AND (NOT Index < '3') OR (Bool = 'Yes')" << endl;
+	cout << "((Age > '20') OR (NOT Index = '1')) AND (Bool <> 'Yes')" << endl << endl;
+
+	cout << "SELECT ";
+	cin.ignore();
+	getline(cin, select_string);
+	stringstream ss(select_string);
+	string temp_string;
+
+	while (ss >> temp_string)
+	{
+		select.push_back(temp_string);
+	}
+
+	cout << endl << "FROM ";	
+	cin >> from;
+
+	cout << endl << "Where ";
+	cin.ignore();
+	getline(cin, where);
+
+	cout << endl << "------------------------------------------------------" << endl;
+
+	Table queryTable = db->query(select, from, where);
+
+	cout << "Table: SELECT ";
+	for (int i = 0; i < select.size(); i++)
+	{
+		cout << select.at(i) << " ";
+	}
+	cout << endl;
+	cout << "FROM " << from << endl;
+	cout << "WHERE " << where << endl;
+ 	queryTable.printTable();
+
+	cout << endl << "------------------------------------------------------" << endl;
+
 }
 
 
