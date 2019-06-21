@@ -1,7 +1,7 @@
 ## Description
 
 ### Functionality
-This is a simple application in C++ that allows a user to query data in the Yelp Dataset (view the yelp dataset online [here](https://www.yelp.com/dataset/challenge)). This is a huge set of JSON data which includes information about users, businesses, reviews, images, abd chekins. This application is menu-based on the command line. The options are as follows:
+This is a simple application in C++ that allows a user to query data in the Yelp Dataset (view the yelp dataset online [here](https://www.yelp.com/dataset/challenge)). This is a huge set of JSON data which includes information about users, businesses, reviews, images, and chekins. This application is menu-based on the command line. The options are as follows:
 1. List Users
 2. List Businesses
 3. User Information 
