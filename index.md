@@ -17,9 +17,9 @@ The user can make simple queries by selecting the different menu items. They can
 ### Database API
 The database API which powers this application was made by fellow students. Currently, the query speed is not optimized, but could easily be optimized by plugging in an optimized database API. 
 
-## JSON Parsing
+### JSON Parsing
 I used an open source JSON parsing API called *rapidjson*. The source and documentation can be found [here](https://github.com/Tencent/rapidjson/).
 
-## The Menu
+### The Menu
 Once the data is parsed, the user receieves the menu and is able to query the data. For testing purposes, I used a subset of the data in order to speed up loading the database. With an optimized database this will not be necessary. The menu takes user input, applies a switch statment, and runs the corresponding function. Check out the source code on github [here](https://github.com/grantsingleton/Database-Application).
 
