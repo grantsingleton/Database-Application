@@ -1,6 +1,6 @@
 # Database_Application
 
-This is a menu-bases application with the following interface:
+This is a menu-based application with the following interface:
 
 1) List Users
 2) List Businesses
