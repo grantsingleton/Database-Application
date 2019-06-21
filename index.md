@@ -9,6 +9,7 @@ This is a simple application in C++ that allows a user to query data in the Yelp
 5. User Reviews
 6. Business Reviews
 7. User Query
+
 The user can make simple queries by selecting the different menu items. They can browse a list of all Yelp users (ten at a time). They can see all the information about a user by inputting their name. They can see all of the reviews that a user has made. In the same way, they can see a list of all businesses in the dataset, they can query information about a business, they can see all user reviews about a particular business. They can also perform a massive number of other queries using the "User Query" Option. This option gives the user the ability to perform a SQL query. They can build a new table with interesting information using this option.
 
 ## Implementation 
